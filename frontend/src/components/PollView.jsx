@@ -3,6 +3,7 @@ import { getPoll, vote } from '../services/api';
 import { useWebSocket } from '../hooks/useWebSocket';
 import PollOptionList from './PollOptionList';
 import PollResults from './PollResults';
+import styles from '../styles/PollView.module.css';
 
 export default function PollView({ pollId }) {
     const [poll, setPoll] = useState(null);
@@ -37,14 +38,14 @@ export default function PollView({ pollId }) {
     }
 
     if (!poll) {
-        return <p>Carregando enquete...</p>;
+        return <p className={styles.loading}>Carregando enquete...</p>;
     }
 
     return (
-        <div>
-            <h1>{poll.question}</h1>
+        <div className={styles.container}>
+            <h1 className={styles.question}>{poll.question}</h1>
 
-            {error && <p role="alert">{error}</p>}
+            {error && <p className={styles.error}>{error}</p>}
 
             {!hasVoted && (
                 <PollOptionList
@@ -54,6 +55,8 @@ export default function PollView({ pollId }) {
                     voting={voting}
                 />
             )}
+
+            {!hasVoted && <div className={styles.divider} />}
 
             <PollResults options={poll.options} />
         </div>
