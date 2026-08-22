@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import CreatePoll from './components/CreatePoll';
+import PollView from './components/PollView';
 
 function App() {
     const [currentPollId, setCurrentPollId] = useState(null);
@@ -12,12 +13,7 @@ function App() {
         return <CreatePoll onPollCreated={handlePollCreated} />;
     }
 
-    return (
-        <div>
-            <p>Enquete criada! ID: {currentPollId}</p>
-            <button onClick={() => setCurrentPollId(null)}>Criar outra</button>
-        </div>
-    );
+    return <PollView pollId={currentPollId} />;
 }
 
 export default App;
