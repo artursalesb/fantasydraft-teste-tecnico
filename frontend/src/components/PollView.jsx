@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getPoll, vote } from '../services/api';
+import { useWebSocket } from '../hooks/useWebSocket';
 import PollOptionList from './PollOptionList';
 import PollResults from './PollResults';
 
@@ -15,14 +16,16 @@ export default function PollView({ pollId }) {
             .catch((err) => setError(err.message));
     }, [pollId]);
 
+    useWebSocket(pollId, (updatedPoll) => {
+        setPoll(updatedPoll);
+    });
+
     async function handleVote(optionId) {
         setVoting(true);
         setError(null);
         try {
             await vote(pollId, optionId);
             setHasVoted(true);
-            const updatedPoll = await getPoll(pollId);
-            setPoll(updatedPoll);
         } catch (err) {
             setError(err.message);
             if (err.message.includes('já votou')) {
