@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Poll;
+use App\Models\PollOption;
+use App\Models\Vote;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+
+class VoteController extends Controller
+{
+    public function store(Request $request, Poll $poll)
+    {
+        $validated = $request->validate([
+            'poll_option_id' => 'required|integer|exists:poll_options,id',
+        ]);
+
+        $option = PollOption::findOrFail($validated['poll_option_id']);
+
+        if ($option->poll_id !== $poll->id) {
+            throw ValidationException::withMessages([
+                'poll_option_id' => 'Essa opção não pertence a essa enquete.',
+            ]);
+        }
+
+        $alreadyVoted = Vote::where('poll_id', $poll->id)
+            ->where('user_id', $request->user()->id)
+            ->exists();
+
+        if ($alreadyVoted) {
+            throw ValidationException::withMessages([
+                'poll_option_id' => 'Você já votou nessa enquete.',
+            ]);
+        }
+
+        $vote = Vote::create([
+            'poll_id' => $poll->id,
+            'poll_option_id' => $option->id,
+            'user_id' => $request->user()->id,
+        ]);
+
+        return response()->json($vote, 201);
+    }
+}
