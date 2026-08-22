@@ -1,0 +1,18 @@
+# Backend (Laravel)
+backend/vendor/
+backend/.env
+backend/node_modules/
+backend/storage/*.key
+
+# Frontend (React)
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# Realtime (Node)
+realtime/node_modules/
+realtime/.env
+
+# Geral
+.DS_Store
+*.log
