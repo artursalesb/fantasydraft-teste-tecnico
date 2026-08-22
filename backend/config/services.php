@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'realtime' => [
+        'url' => env('REALTIME_URL', 'http://localhost:3001'),
+    ],
+
 ];

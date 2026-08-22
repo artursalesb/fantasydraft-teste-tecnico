@@ -6,6 +6,7 @@ use App\Models\Poll;
 use App\Models\PollOption;
 use App\Models\Vote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 
 class VoteController extends Controller
@@ -40,6 +41,24 @@ class VoteController extends Controller
             'user_id' => $request->user()->id,
         ]);
 
+        $this->notifyRealtimeServer($poll);
+
         return response()->json($vote, 201);
+    }
+
+    private function notifyRealtimeServer(Poll $poll): void
+    {
+        $poll->load(['options' => function ($query) {
+            $query->withCount('votes');
+        }]);
+
+        try {
+            Http::timeout(2)->post(
+                config('services.realtime.url') . "/broadcast/{$poll->id}",
+                $poll->toArray()
+            );
+        } catch (\Exception $e) {
+            report($e);
+        }
     }
 }
