@@ -38,13 +38,16 @@ async function apiRequest(path, options = {}) {
     return response.json();
 }
 
-export function createPoll(question, options) {
+export function createPoll(question, options, durationMinutes) {
     return apiRequest('/polls', {
         method: 'POST',
-        body: JSON.stringify({ question, options }),
+        body: JSON.stringify({
+            question,
+            options,
+            duration_minutes: durationMinutes,
+        }),
     });
 }
-
 export function getPoll(pollId) {
     return apiRequest(`/polls/${pollId}`);
 }

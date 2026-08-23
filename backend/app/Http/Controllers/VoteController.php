@@ -13,6 +13,11 @@ class VoteController extends Controller
 {
     public function store(Request $request, Poll $poll)
     {
+        if ($poll->closes_at !== null && now()->greaterThan($poll->closes_at)) {
+           throw ValidationException::withMessages([
+            'poll_option_id' => 'Essa enquete já foi encerrada.',
+        ]);
+    }
         $validated = $request->validate([
             'poll_option_id' => 'required|integer|exists:poll_options,id',
         ]);

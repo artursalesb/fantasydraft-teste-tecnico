@@ -33,3 +33,19 @@
     background: #322a4a;
     margin: 24px 0;
 }
+.timer {
+    color: #a1a1aa;
+    font-size: 13px;
+    margin-bottom: 16px;
+}
+
+.closedBadge {
+    display: inline-block;
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}

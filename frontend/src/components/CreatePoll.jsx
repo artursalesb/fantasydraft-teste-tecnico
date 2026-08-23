@@ -5,6 +5,7 @@ import styles from '../styles/CreatePoll.module.css';
 export default function CreatePoll({ onPollCreated }) {
     const [question, setQuestion] = useState('');
     const [options, setOptions] = useState(['', '']);
+    const [durationMinutes, setDurationMinutes] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -40,7 +41,7 @@ export default function CreatePoll({ onPollCreated }) {
 
         setLoading(true);
         try {
-            const poll = await createPoll(question.trim(), validOptions);
+            const poll = await createPoll(question.trim(), validOptions, durationMinutes || null);
             onPollCreated(poll.id);
         } catch (err) {
             setError(err.message);
@@ -63,6 +64,17 @@ export default function CreatePoll({ onPollCreated }) {
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
                 placeholder="Qual sua pergunta?"
+            />
+
+            <label htmlFor="duration" className={styles.label}>Duração (minutos, opcional)</label>
+            <input
+                id="duration"
+                type="number"
+                min="1"
+                className={styles.input}
+                value={durationMinutes}
+                onChange={(e) => setDurationMinutes(e.target.value)}
+                placeholder="Deixe vazio para não expirar"
             />
 
             <label className={styles.label}>Opções</label>
